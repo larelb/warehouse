@@ -1,0 +1,16 @@
+@(productForm: Form[Product])
+@import b4.vertical.fieldConstructor
+
+@main("Product form") {
+    <h1>Product form</h1>
+    @b4.formCSRF(routes.ProductsController.save) {
+    <fieldset>
+        <legend>Product (New)</legend>
+        @b4.text(productForm("ean"), '_label -> "EAN")
+        @b4.text(productForm("name"),'_label -> "Name")
+        @b4.textarea(productForm("description"), '_label -> "Description")
+    </fieldset>
+    @b4.submit('class -> "btn btn-primary"){ Save }
+    <a class="btn" href="@routes.ProductsController.list()">Cancel</a>
+    }
+}

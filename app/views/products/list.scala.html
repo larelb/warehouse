@@ -1,0 +1,36 @@
+@(products: List[Product])
+
+@main("Products Catalog") {
+
+<h2>All products</h2>
+
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>EAN</th>
+        <th>Name</th>
+        <th>Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    @for(product <- products) {
+        @helper.CSRF.formField
+    <tr>
+        <td><a href="@routes.ProductsController.details(product.ean)">
+            @product.ean
+        </a></td>
+        <td><a href="@routes.ProductsController.details(product.ean)">
+            @product.name</a></td>
+        <td><a href="@routes.ProductsController.details(product.ean)">
+            @product.name</a></td>
+        <td><a href="@routes.ProductsController.details(product.ean)"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+            <a href="@routes.ProductsController.delete(product.ean)" id="delete-link"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+        </td>
+    </tr>
+    }
+
+    </tbody>
+</table>
+
+<a href="@routes.ProductsController.newProduct()" class="btn btn-success"><i class="fa fa-plus" aria-hidden="true"></i> New Product</a>
+}
