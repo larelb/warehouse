@@ -8,4 +8,5 @@ target
 test
 .git8
 /RUNNING_PID
-/conf/application.conf
+conf/application.conf
+conf/production.conf
