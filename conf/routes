@@ -2,14 +2,13 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-# An example controller showing a sample home page
-GET     /                           controllers.HomeController.index
-
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
 
-GET     /products/                  controllers.ProductsController.list()
+GET     /                           controllers.ProductsController.index()
+GET     /products/                  controllers.ProductsController.list(page: Integer ?= 1)
+POST    /products/                  controllers.ProductsController.save()
+
 GET     /products/new               controllers.ProductsController.newProduct()
 GET     /products/:ean              controllers.ProductsController.details(ean: String)
-POST    /products/                  controllers.ProductsController.save()
 DELETE  /products/:ean              controllers.ProductsController.delete(ean: String)

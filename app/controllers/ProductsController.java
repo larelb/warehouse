@@ -9,11 +9,13 @@ import play.mvc.Result;
 
 import java.util.List;
 
+import play.mvc.With;
 import views.html.products.list;
 import views.html.products.details;
 
 import javax.inject.Inject;
 
+@With(CatchAction.class)
 public class ProductsController extends Controller {
 
     private final Form<Product> productForm;
@@ -23,7 +25,11 @@ public class ProductsController extends Controller {
         this.productForm = formFactory.form(Product.class);
     }
 
-    public Result list() {
+    public Result index() {
+        return redirect(routes.ProductsController.list(0));
+    }
+
+    public Result list(Integer page) {
         List<Product> products = Product.findAll();
         return ok(list.render(products));
     }
@@ -54,7 +60,7 @@ public class ProductsController extends Controller {
         flash("success",
                 String.format("Successfully added product %s", product));
 
-        return redirect(routes.ProductsController.list());
+        return redirect(routes.ProductsController.list(1));
     }
 
     public Result delete(String ean) {
@@ -63,7 +69,7 @@ public class ProductsController extends Controller {
             return notFound(String.format("Product %s does not exists.", ean));
         }
         Product.remove(product);
-        return redirect(routes.ProductsController.list());
+        return redirect(routes.ProductsController.list(1));
     }
 
 }
