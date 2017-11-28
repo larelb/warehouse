@@ -1,14 +1,24 @@
 package models;
 
 import play.data.validation.Constraints;
+import play.libs.F;
+import play.mvc.PathBindable;
+import play.mvc.QueryStringBindable;
 
 import javax.validation.Constraint;
-import java.util.ArrayList;
-import java.util.List;
+import javax.validation.ConstraintValidator;
+import javax.validation.Payload;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
+import java.util.*;
 
-public class Product {
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+
+public class Product implements PathBindable<Product>, QueryStringBindable<Product>{
 
     private static List<Product> products;
+    public List<Tag> tags = new LinkedList<Tag>();
 
     static {
         products = new ArrayList<Product>();
@@ -24,11 +34,43 @@ public class Product {
                 "Paperclips description 5"));
     }
 
+    @Target({FIELD})
+    @Retention(RUNTIME)
+    @Constraint(validatedBy = EanValidator.class)
+    @play.data.Form.Display(name="constraint.ean", attributes={"value"})
+    public static @interface EAN {
+        String message() default EanValidator.message;
+        Class<?>[] groups() default {};
+        Class<? extends Payload>[] payload() default {};
+    }
+
+    public static class EanValidator extends Constraints.Validator<String> implements ConstraintValidator<EAN, String>{
+        final static public String message = "error.invalid.ean";
+
+        public EanValidator() {}
+
+        @Override
+        public void initialize(EAN constraintAnnotation) {}
+
+        @Override
+        public boolean isValid(String value) {
+            String pattern = "^[0-9]{13}$";
+            return value != null && value.matches(pattern);
+        }
+
+        @Override
+        public F.Tuple<String, Object[]> getErrorMessageKey() {
+            return new F.Tuple<String, Object[]>("error.invalid.ean", new Object[]{});
+        }
+    }
+
     @Constraints.Required
+    @EAN
     public String ean;
     @Constraints.Required
     public String name;
     public String description;
+    public byte[] picture;
 
     public Product() {}
 
@@ -75,4 +117,25 @@ public class Product {
     public String toString() {
         return String.format("%s - %s", ean, name);
     }
+
+    @Override
+    public Product bind(String key, String value) {
+        return findByEan(value);
+    }
+
+    @Override
+    public Optional<Product> bind(String key, Map<String, String[]> data) {
+        return Optional.of(findByEan(data.get("ean")[0]));
+    }
+
+    @Override
+    public String unbind(String key) {
+        return this.ean;
+    }
+
+    @Override
+    public String javascriptUnbind() {
+        return this.ean;
+    }
+
 }

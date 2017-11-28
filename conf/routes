@@ -10,5 +10,6 @@ GET     /products/                  controllers.ProductsController.list(page: In
 POST    /products/                  controllers.ProductsController.save()
 
 GET     /products/new               controllers.ProductsController.newProduct()
-GET     /products/:ean              controllers.ProductsController.details(ean: String)
+GET     /products/:ean              controllers.ProductsController.details(ean: models.Product)
 DELETE  /products/:ean              controllers.ProductsController.delete(ean: String)
+GET     /picture/:ean               controllers.ProductsController.picture(ean: String)

@@ -16,14 +16,14 @@
     @for(product <- products) {
         @helper.CSRF.formField
     <tr>
-        <td><a href="@routes.ProductsController.details(product.ean)">
+        <td><a href="@routes.ProductsController.details(product)">
             @product.ean
         </a></td>
-        <td><a href="@routes.ProductsController.details(product.ean)">
+        <td><a href="@routes.ProductsController.details(product)">
             @product.name</a></td>
-        <td><a href="@routes.ProductsController.details(product.ean)">
+        <td><a href="@routes.ProductsController.details(product)">
             @product.name</a></td>
-        <td><a href="@routes.ProductsController.details(product.ean)"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+        <td><a href="@routes.ProductsController.details(product)"><i class="fa fa-pencil" aria-hidden="true"></i></a>
             <a href="@routes.ProductsController.delete(product.ean)" id="delete-link"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
         </td>
     </tr>

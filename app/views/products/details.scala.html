@@ -3,14 +3,38 @@
 
 @main("Product form") {
     <h1>Product form</h1>
-    @b4.formCSRF(routes.ProductsController.save) {
-    <fieldset>
-        <legend>Product (New)</legend>
-        @b4.text(productForm("ean"), '_label -> "EAN")
-        @b4.text(productForm("name"),'_label -> "Name")
-        @b4.textarea(productForm("description"), '_label -> "Description")
-    </fieldset>
-    @b4.submit('class -> "btn btn-primary"){ Save }
-    <a class="btn" href="@routes.ProductsController.list()">Cancel</a>
+    @b4.formCSRF(routes.ProductsController.save, 'enctype -> "multipart/form-data") {
+        <fieldset>
+            <legend>Product (New)</legend>
+            @b4.text(productForm("ean"), '_label -> "EAN")
+            @b4.text(productForm("name"),'_label -> "Name")
+            @b4.textarea(productForm("description"), '_label -> "Description")
+            @b4.file(productForm("picture"))
+            @if(!productForm("picture").valueOr("").isEmpty()) {
+                <div class="control-group">
+                    <div class="controls">
+                        <img src="@routes.ProductsController.picture(productForm("ean").value)"/>
+                    </div>
+                </div>
+            }
+        </fieldset>
+        <div class="control-group">
+            <div class="controls">
+                <input name="tags[0].id" value="1" type="checkbox"
+                       @for(i <- 0 to 2) {
+                @if(productForm("tags[" + i + "].id").value=="1"){ checked }
+                }> lightweight
+                <input name="tags[1].id" value="2" type="checkbox"
+                       @for(i <- 0 to 2) {
+                @if(productForm("tags[" + i + "].id").value=="2"){ checked }
+                }> metal
+                <input name="tags[2].id" value="3" type="checkbox"
+                       @for(i <- 0 to 2) {
+                @if(productForm("tags[" + i + "].id").value=="3"){ checked }
+                }> plastic
+            </div>
+        </div>
+        @b4.submit('class -> "btn btn-primary"){ Save }
+        <a class="btn" href="@routes.ProductsController.list()">Cancel</a>
     }
 }
